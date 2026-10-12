@@ -1,119 +1,127 @@
 ---
 id: proc-session-loop
 type: procedural
-title: Standard Session Prompting Loop
-created: 2026-09-15
-updated: 2026-09-15
+title: Standard Session Prompting Loop — V2
+created: 2026-10-08
+updated: 2026-10-08
 author: system
 confidence: high
 ttl: permanent
 status: active
-tags: [session, prompting, loop, core-ux]
+tags: [session, prompting, loop, core-ux, v2]
 related: [proc-memory-assembly, proc-lint-pass, proc-inbox-promotion, proc-new-project-init]
 source: system
 ---
 
-# Workflow: Standard Session Prompting Loop
+# Workflow: Standard Session Prompting Loop — V2
 
 ## Purpose
 
-This is the core UX of the entire system. Every session — regardless of project type, user, or AI model — follows this same 5-prompt sequence. It is designed to be simple enough for a non-technical user to run from day one.
+The core UX of the system. Every session follows this 5-prompt sequence. V2 updates Prompts 3 and 4 to use the tiered promotion system — eliminating approval fatigue by only surfacing items that genuinely need human judgment.
 
 ## When To Use This
 
-Use this loop for every ongoing session after the vault has been initialised. For brand new projects, run `procedural/new-project-init.md` first, then use this loop from session 2 onwards.
+Every ongoing session after vault initialisation. For new projects run `procedural/new-project-init.md` first.
 
 ---
 
 ## The 5-Prompt Loop
 
 ### Prompt 1 — Start Session
-Copy and send this exactly:
 
-> "Start a new session. Read CLAUDE.md and index.md, assemble my working memory, and summarise what you know about this project so far."
+```
+Start a new session. Read CLAUDE.md and index.md, assemble working memory
+using relevance scoring, and give me a context summary covering: current
+project status, key facts loaded, last session date, active tasks, inbox
+status, and vault health rating.
+```
 
 **What the AI does:**
-- Loads `_meta/CLAUDE.md` and `_meta/index.md`
-- Identifies and loads relevant semantic, episodic, procedural, and prospective files
-- Registers the session in `_meta/models.md`
-- Outputs a summary of current project knowledge so you can confirm context is correct
+- Loads CLAUDE.md and index.md
+- Identifies session topic
+- Scores and loads relevant semantic, episodic, procedural, and prospective files
+- Checks for continuity snapshot from interrupted sessions
+- Registers session in models.md
+- Outputs context summary
 
 **What you do:**
-- Read the summary
-- Correct anything wrong or outdated before proceeding
-- If the summary looks right, move to Prompt 2
+- Read the summary — correct anything wrong before proceeding
+- If a continuity snapshot is found — decide to resume or start fresh
 
 ---
 
 ### Prompt 2 — Work
-No special prompt. Just have your normal conversation, ask questions, give tasks, or work on your project.
+
+No special prompt. Normal conversation, questions, tasks, or project work.
 
 **What the AI does:**
-- Works using the assembled working memory as context
-- References existing memories naturally in its responses
-- Flags if it encounters something that contradicts existing memory
-
-**What you do:**
-- Work normally
-- Note anything that feels like it should be remembered for future sessions
+- Works using assembled working memory as context
+- References existing memories naturally
+- Flags contradictions with existing memory as they arise
 
 ---
 
 ### Prompt 3 — Capture
-Copy and send this at the end of your working conversation:
 
-> "What new facts, decisions, or insights from this session should be saved to memory? Propose what to write and which files to update or create, following the topic-chunking rules."
+```
+What should be saved from this session? Apply the tiered promotion system:
+tell me what will auto-promote (Tier 1), what needs my approval (Tier 2),
+and what goes to batch review (Tier 3). Show me only the Tier 2 items.
+```
 
 **What the AI does:**
 - Reviews the full session
-- Identifies new facts → proposes additions to existing semantic files or new files
-- Identifies decisions made → proposes episodic log entry
-- Identifies new tasks → proposes prospective entries
-- Identifies outdated memories → flags for update or archive
-- Presents a structured proposal, writes nothing yet
+- Classifies every candidate memory item by tier
+- Tier 1 items: listed as "will auto-promote — no action needed"
+- Tier 2 items: presented individually for human decision
+- Tier 3 items: listed as "going to batch review — no action needed this session"
 
 **What you do:**
-- Review the proposal
-- Approve, edit, or remove individual items
-- Move to Prompt 4
+- Glance at the Tier 1 list — confirm it looks right
+- Review each Tier 2 item and respond: APPROVE / EDIT / REJECT / DEFER
+- No action needed on Tier 3 items
 
 ---
 
 ### Prompt 4 — Review
-Copy and send this:
 
-> "Show me exactly what you're about to write before saving anything. Present each file's full content for my approval."
+```
+Show me the full content of each Tier 2 approved item before writing.
+Include confidence rating and source type on each one.
+```
 
 **What the AI does:**
-- Shows the complete content of every file it intends to write
-- Waits for explicit approval on each item
-- Does not write anything until approved
+- Shows complete content only for Tier 2 approved items
+- Does not show Tier 1 items — they auto-promote
+- Waits for final confirmation before writing anything
 
 **What you do:**
-- Read each proposed file carefully
+- Review each Tier 2 file
 - Edit inline if needed
-- Approve each item or mark it rejected
-- When all items are resolved, move to Prompt 5
+- Confirm when ready
 
 ---
 
 ### Prompt 5 — Close Session
-Copy and send this after approving items in Prompt 4:
 
-> "Approved. Write the confirmed items to _inbox/, update the episode log for today's session, run the lint pass, and close this session with a summary of what was saved."
+```
+Confirmed. Write Tier 2 approved items to _inbox/, auto-promote Tier 1
+items, move Tier 3 items to _inbox/review/, update today's episode log,
+run the lint pass with checkpoints, and close with a summary.
+```
 
 **What the AI does:**
-- Writes all approved items to `_inbox/` with `status: pending`
-- Creates or updates today's episodic log file in `_inbox/`
-- Runs the lint pass (promotes inbox items, checks conflicts, updates index)
-- Updates `_meta/models.md` session entry with end time
-- Logs `SESSION_END` in `_meta/log.md`
-- Outputs a closing summary: what was saved, what was archived, what's pending
+- Writes Tier 2 approved items to `_inbox/`
+- Auto-promotes Tier 1 items directly to memory folders
+- Moves Tier 3 items to `_inbox/review/`
+- Creates episodic log entry in `_inbox/`
+- Runs lint pass (all 11 checkpoints)
+- Updates models.md and logs SESSION_END
+- Outputs closing summary
 
 **What you do:**
 - Read the closing summary
-- Flag anything that looks wrong
-- Close the session
+- Note any compression candidates or Tier 2 items still pending
 
 ---
 
@@ -121,35 +129,64 @@ Copy and send this after approving items in Prompt 4:
 
 | Prompt | Say | Purpose |
 |---|---|---|
-| 1 | "Start a new session..." | Load memory, confirm context |
-| 2 | *(normal work)* | Do the actual work |
-| 3 | "What should be saved..." | Identify new memories |
-| 4 | "Show me what you'll write..." | Review before saving |
-| 5 | "Approved. Write and close..." | Commit and close |
+| 1 | "Start session, load memory, give context summary" | Load context |
+| 2 | *(normal work)* | Do the work |
+| 3 | "What to save? Show me Tier 2 only" | Tiered capture |
+| 4 | "Show Tier 2 full content before writing" | Review before save |
+| 5 | "Confirmed — write, promote, lint, close" | Commit and close |
 
 ---
 
-## Shortcuts For Experienced Users
+## Optional Maintenance Prompts
 
-Once you're comfortable with the loop, these shortened prompts work the same way:
+Use these as needed — not every session.
 
-- **Start:** "New session, load memory."
-- **Capture:** "What should we save from this session?"
-- **Review:** "Show me before you write."
-- **Close:** "Approved, write and close."
+### Resume Interrupted Session
+```
+Check _inbox/ for a continuity snapshot from a previous interrupted session.
+If found, load it and tell me where we left off and what the next action was.
+```
+
+### Vault Health Check
+```
+Run a vault health check without a full lint pass. Show me: inbox count,
+review pile count, stale file count, overdue tasks, last lint date,
+and overall health rating (Green / Amber / Red).
+```
+
+### Renew Stale Files
+```
+Show me all files with status: stale that are within the 14-day renewal
+window. For each one: filename, what it contains, when it expired.
+I will renew or archive each one.
+```
+
+### Weekly Batch Review
+```
+Show me all items in _inbox/review/. For each one: filename, one-line
+summary, confidence, source type, and recommended action.
+I will approve, edit, or reject each one.
+```
+
+### Manual Lint Pass
+```
+Run a full lint pass now. Execute all 11 checkpoints in order. Report
+each checkpoint result and stop if any step fails.
+```
 
 ---
 
 ## Autonomy Level Adjustments
 
-The loop above assumes **Level 1 (Assisted)** — human approves every write.
+**Level 1 (Assisted — default):** Full 5-prompt loop as above. Human reviews Tier 2 only.
 
 **Level 2 (Semi-autonomous):** Skip Prompts 3 and 4. End with:
-> "Save anything worth keeping from this session to _inbox/ and run the lint pass."
+```
+Save Tier 1 items automatically, queue Tier 2 to inbox, move Tier 3 to
+review pile, run lint pass, and send me a summary.
+```
 
-**Level 3 (Autonomous):** The agent runs the full loop without prompting. You receive a session summary notification only.
-
-See `_meta/CLAUDE.md` → Agent Autonomy Levels for how to set the level for your project.
+**Level 3 (Autonomous):** Agent runs full loop. Human receives session summary notification only.
 
 ---
 
@@ -157,4 +194,5 @@ See `_meta/CLAUDE.md` → Agent Autonomy Levels for how to set the level for you
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0 | 2026-09-15 | system | Initial release |
+| 1.0 | 2026-10-08 | system | Initial version |
+| 2.0 | 2026-10-08 | system | V2 — tiered promotion in Prompts 3 and 4, context summary in Prompt 1, optional maintenance prompts added, resume interrupted session prompt, vault health check prompt, weekly batch review prompt |

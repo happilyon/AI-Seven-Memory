@@ -1,6 +1,6 @@
 # Universal AI Memory Vault — Step By Step Prompts Guide
 
-> **Version:** 1.0.0 | **Created:** 2026-09-15 | **Updated:** 2026-09-15
+> **Version:** 2.0.0 | **Created:** 2026-10-08 | **Updated:** 2026-10-08
 >
 > This is your complete copy-and-paste prompt guide. Every prompt you need to run this system is here in order. You do not need to read any other file to get started — just follow the steps below.
 >
@@ -101,7 +101,7 @@ Fill in these three fields before pasting into your external chat:
 
 ---
 
-> **Single project rule:** This vault is for one project only. If you are starting a new unrelated project, create a fresh copy of the vault template rather than adding it here.
+> **Single project rule:** This vault is for one project only. For a new unrelated project, clone a fresh copy of the vault template rather than adding it here.
 
 ### Step 1 — Introduce The System To The AI And Register The Model
 
@@ -316,55 +316,56 @@ Remember from our loaded memory that [remind the relevant fact].
 
 ---
 
-### Prompt 3 — Capture New Memories
+### Prompt 3 — Capture New Memories (Tiered)
 
 Send this when you are done with the main work of the session:
 
 ```
-We are done with the main work for this session. 
+What should be saved from this session? Apply the tiered promotion system:
+- Tier 1 (auto-promote): HIGH confidence, USER or EXTERNAL_SOURCE — list these, no approval needed
+- Tier 2 (needs my decision): MEDIUM confidence, AI-sourced, or contradictions — show me these
+- Tier 3 (batch review): LOW confidence or INFERENCE — move to review pile, no action needed now
 
-Review everything discussed and identify:
-1. New facts or knowledge that should be added to semantic memory
-2. Any existing semantic memory files that need updating
-3. Decisions made that should be logged
-4. Any new tasks or follow-up actions for prospective memory
-5. Any retrieval documents referenced that should be saved
-6. Any existing memories that are now outdated and should be flagged
-
-Propose exactly what should be written or updated. Do not write anything yet.
-Present your proposals as a numbered list so I can approve or reject each one.
+Show me only the Tier 2 items that need my decision. Present each with its confidence rating and source type.
 ```
 
-**Wait for:** A numbered proposal list from the AI.
+**Wait for:** AI to classify all items by tier and present Tier 2 items only.
 
-**Respond to each proposal:**
+**For each Tier 2 item respond with:**
 ```
-Approved: [item numbers]
-Rejected: [item numbers] — reason: [optional]
+Approve item [number]
 Edit item [number]: [your changes]
+Reject item [number]
+Defer item [number] to next session
 ```
+
+**Tier 1 items** — glance at the list and confirm it looks right. No individual approval needed.
+**Tier 3 items** — no action required this session. Reviewed weekly via batch review prompt.
 
 ---
 
-### Prompt 4 — Review Before Saving
+### Prompt 4 — Review Tier 2 Items Before Saving
 
-Send after approving proposals:
+Send after responding to Tier 2 items in Prompt 3:
 
 ```
-Show me the exact content of every file you are about to write — 
-full content including frontmatter for each one. 
-Confirm the author: field shows [your current model name] on every file.
-Present them one at a time. Do not write anything until I give final approval.
+Show me the full content of each Tier 2 approved item before writing.
+Include the confidence rating and source type on each file.
+Tier 1 items do not need to be shown — they auto-promote.
+Confirm author: field shows [your model name] on every file.
+Present one at a time. Do not write anything until I confirm.
 ```
 
-Review each file. For each one respond with:
+Review each Tier 2 file. For each one respond with:
 ```
-Approved. Next file.
+Confirmed. Next file.
 ```
 or
 ```
 Change [this specific thing] then show me again.
 ```
+
+Note: You will only see Tier 2 files here — not the full list of everything being saved. Tier 1 auto-promotes without review.
 
 ---
 
@@ -506,20 +507,66 @@ for my review. Do not update any active files until I approve.
 
 ---
 
-### Request A Vault Health Report
+### Quick Vault Health Check
 
 ```
-Generate a vault health report covering:
+Run a vault health check without a full lint pass. Show me:
+- Inbox count (pending items)
+- Review pile count (_inbox/review/ items)
+- Stale file count
+- Overdue prospective tasks
+- Last lint pass date
+- Overall health rating: Green / Amber / Red
+```
+
+---
+
+### Resume An Interrupted Session
+
+```
+Check _inbox/ for a continuity snapshot from a previous interrupted session.
+If found, load it and tell me: what session was interrupted, what we were
+working on, what decisions had been made, and what the next action was.
+Ask me whether to resume or start fresh.
+```
+
+---
+
+### Renew Stale Files
+
+```
+Show me all files with status: stale that are within the 14-day renewal window.
+For each one show: filename, what it contains, when it expired, and your
+recommendation to renew or archive. I will decide on each one.
+```
+
+---
+
+### Weekly Batch Review
+
+```
+Show me all items in _inbox/review/. For each one show: filename, one-line
+summary, confidence rating, source type, and your recommended action.
+I will approve, edit, or reject each one.
+```
+
+---
+
+### Request A Full Vault Health Report
+
+```
+Generate a full vault health report covering:
 1. Total files by memory type and status
 2. Files expiring in the next 30 days
-3. Any unresolved conflicts or orphan files
-4. _inbox/ items pending promotion
-5. Active prospective tasks and their deadlines
-6. Last lint pass date and what it found
-7. Which AI models have contributed to this vault (from models.md and author: fields)
-8. Overall assessment: is the vault healthy?
+3. Tier 2 items awaiting approval in _inbox/
+4. Tier 3 items in _inbox/review/ awaiting batch review
+5. Any unresolved conflicts or orphan files
+6. Active prospective tasks and their deadlines
+7. Last lint pass date and checkpoint results
+8. Which AI models have contributed to this vault
+9. Overall health rating: Green / Amber / Red
 
-Present as a structured report. Flag anything that needs my attention.
+Present as a structured report. Flag anything needing immediate attention.
 ```
 
 ---
@@ -530,6 +577,10 @@ Present as a structured report. Flag anything that needs my attention.
 | Action | Short Prompt |
 |---|---|
 | Extract external chat | Open CHAT-EXTRACTION-PROMPT.md, paste at end of chat, check quality table, save to _inbox/ |
+| Vault health check | "Run a vault health check — inbox, review pile, stale files, health rating" |
+| Resume interrupted session | "Check _inbox/ for a continuity snapshot from an interrupted session" |
+| Renew stale files | "Show me stale files within the 14-day renewal window" |
+| Weekly batch review | "Show me all items in _inbox/review/ for batch review" |
 | Start session | "New session — I am using [model name] in [IDE]. Load memory and summarise." |
 | End work, capture | "What should we save from this session?" |
 | Review before save | "Show me before you write — confirm author: shows [model name]." |
@@ -591,6 +642,25 @@ in every memory folder and updating the content catalog and vault stats.
 Scan all files in [folder name] and list the author: field value for each file.
 Cross reference with _meta/log.md to confirm which model and IDE created each one.
 Present as a table with filename, author, and date created.
+```
+
+**The AI is sending too many items to the Tier 2 approval queue:**
+```
+Stop. Review your tiered promotion criteria. Tier 2 should only contain
+MEDIUM confidence USER items, AI-sourced items, duplicates, and contradictions.
+HIGH confidence USER items must auto-promote as Tier 1. Re-classify and resubmit.
+```
+
+**A Tier 1 item was auto-promoted that should not have been:**
+```
+Move [filename] back to _inbox/ with status: pending. Reclassify it as
+Tier 2 by changing source_type to AI or confidence to medium. Log a REVERT action.
+```
+
+**The batch review pile is growing too large:**
+```
+Run the weekly batch review now. Show me all items in _inbox/review/ grouped
+by type. I will do a bulk approve, edit, or reject on each group.
 ```
 
 ---

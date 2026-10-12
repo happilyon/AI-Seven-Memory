@@ -1,6 +1,6 @@
 # Universal AI Memory Vault — Complete System Documentation
 
-> **Version:** 1.0.0 | **Created:** 2026-09-15 | **Updated:** 2026-09-15 | **Schema:** See `_meta/CLAUDE.md`
+> **Version:** 2.0.0 | **Created:** 2026-10-08 | **Updated:** 2026-10-08 | **Schema:** See `_meta/CLAUDE.md`
 >
 > This document is the human-readable and AI-readable guide to the entire memory system. Read this before interacting with or building on the vault. It explains the *why* behind every design decision, not just the *what*.
 
@@ -47,8 +47,6 @@ It implements all **7 cognitive memory types** drawn from cognitive science and 
 - **Easy to use** — a standard 5-prompt session loop means anyone can run it from day one
 
 It is **not** a vector database, not a cloud service, and not tied to any specific AI platform. The files are the system.
-
-**Single project scope:** Each vault is dedicated to one project only. For every new project, clone a fresh copy of the vault template. This keeps each vault focused, manageable, and clean.
 
 ---
 
@@ -228,7 +226,7 @@ ttl: 30d | 90d | 365d | permanent | YYYY-MM-DD
 status: active | stale | archived | pending
 tags: [tag1, tag2, tag3]
 related: [other-file-id, another-file-id]
-source: https://url or "session-2026-09-15" or "user-stated"
+source: https://url or "session-2026-10-08" or "user-stated"
 ---
 ```
 

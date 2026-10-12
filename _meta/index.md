@@ -1,5 +1,5 @@
 # Vault Index
-> Auto-maintained by lint pass. Last updated: 2026-09-15 | Schema version: 1.0.0
+> Auto-maintained by lint pass. Last updated: 2026-10-08 | Schema version: 2.0.0
 
 This file is the content catalog of the entire vault. Every active memory file is listed here. Use this file to navigate the vault and decide what to load into working memory.
 
@@ -20,7 +20,7 @@ This file is the content catalog of the entire vault. Every active memory file i
 
 | File | Description |
 |---|---|
-| `_meta/CLAUDE.md` | Schema v1.0.0 — rules engine, prompting loops, agent autonomy levels, extraction Rule 12 |
+| `_meta/CLAUDE.md` | Schema v2.2.0 — rules engine, prompting loops, agent autonomy levels, extraction Rule 12 |
 | `_meta/index.md` | This file — vault content catalog and project topic map |
 | `_meta/log.md` | Append-only action log |
 | `_meta/models.md` | Registry of AI models that have accessed this vault |
@@ -35,9 +35,36 @@ This file is the content catalog of the entire vault. Every active memory file i
 
 ---
 
+
+---
+
+## Vault Health Status
+
+| Metric | Value |
+|---|---|
+| Health Rating | 🟢 Green |
+| Last Lint Pass | Not yet run |
+| Inbox Pending | 0 |
+| Review Pile | 0 |
+| Stale Files | 0 |
+| Overdue Tasks | 0 |
+
+> Updated automatically by lint pass. Run "vault health check" prompt for current status.
+
+---
+
+## Agent Autonomy Level
+
+**Current level:** 1 — Assisted
+*Tier 1 items auto-promote. Tier 2 items require human approval. Tier 3 goes to batch review.*
+
 ## _inbox (Pending Promotion)
 
 *Empty — no items awaiting lint review.*
+
+### _inbox/review/ (Batch Review Pile)
+
+*Empty — no Tier 3 items pending weekly review.*
 
 ---
 
@@ -57,11 +84,11 @@ This file is the content catalog of the entire vault. Every active memory file i
 
 | File | Description |
 |---|---|
-| `procedural/session-loop.md` | The 5-prompt standard session loop — core UX for every session |
+| `procedural/session-loop.md` | V2 — 5-prompt session loop with tiered promotion, optional maintenance prompts |
 | `procedural/new-project-init.md` | The 5-prompt new project initialisation loop — run once per new vault |
-| `procedural/lint-pass.md` | Step-by-step lint pass workflow |
-| `procedural/inbox-promotion.md` | How to promote _inbox items to memory folders |
-| `procedural/memory-assembly.md` | How to assemble working memory per session |
+| `procedural/lint-pass.md` | V2 — 11-checkpoint lint pass with tiered promotion and compression quality gate |
+| `procedural/inbox-promotion.md` | V2 — tiered promotion: Tier 1 auto-promote, Tier 2 human queue, Tier 3 batch review |
+| `procedural/memory-assembly.md` | V2 — relevance scoring, file limits, continuity snapshot protocol |
 
 ---
 

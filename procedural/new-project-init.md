@@ -2,8 +2,8 @@
 id: proc-new-project-init
 type: procedural
 title: New Project Initialisation Loop
-created: 2026-09-15
-updated: 2026-09-15
+created: 2026-10-08
+updated: 2026-10-08
 author: system
 confidence: high
 ttl: permanent
@@ -177,4 +177,4 @@ semantic/brand-guidelines.md      → visual and verbal brand rules
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0 | 2026-09-15 | system | Initial release |
+| 1.0 | 2026-10-08 | system | Initial version |

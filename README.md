@@ -155,10 +155,10 @@ The vault is the shared brain. Any model that reads CLAUDE.md can operate in it 
 
 | Version | Focus | Status |
 |---|---|---|
-| **V1 — Current** | Core vault template, 7 memory types, session loop, 5 use cases | ✅ Complete |
-| **V2 — Near term** | Claude Code automation scripts, vector search layer, .gitignore template | 🔜 Planned |
-| **V3 — Mid term** | Background lint agent, multi-agent orchestration, additional use case templates | 🔜 Planned |
-| **V4 — Long term** | Web/mobile interface, hosted SaaS, model-agnostic API, fine-tuning pipeline | 🔜 Planned |
+| **V1** | Core vault template, 7 memory types, session loop, 5 use cases | ✅ Complete |
+| **V2 — Current** | Tiered approval system, lint pass checkpoints, relevance scoring, session continuity, vault health check, TTL renewal, log pruning | ✅ Complete |
+| **V3 — Near term** | Claude Code automation scripts, vector search layer | 🔜 Planned |
+| **V4 — Long term** | Web/mobile interface, hosted SaaS, model-agnostic API | 🔜 Planned |
 
 ---
 
@@ -202,7 +202,7 @@ MIT — use freely, build on it, make it yours.
 
 ---
 
-*Current schema version: 1.0.0 — see `_meta/CLAUDE.md` for changelog*
+*Current schema version: 2.0.0 — see `_meta/CLAUDE.md` for changelog*
 
 ---
 
